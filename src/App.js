@@ -33,6 +33,18 @@ class App extends Component {
       debug('set video stream', this.video, this.stream)
       this.video.srcObject = this.stream
     }
+    this.attachPeerVideos()
+  }
+
+  attachPeerVideos() {
+    Object.entries(this.state.peers).forEach(entry => {
+      const [peerId, peer] = entry
+      if (peer.video && !peer.video.srcObject && peer.stream) {
+        debug('setting peer video stream', peerId, peer.stream)
+        peer.video.setAttribute('data-peer-id', peerId)
+        peer.video.srcObject = peer.stream
+      }
+    })
   }
 
   getMedia(callback, err) {
@@ -150,10 +162,10 @@ class App extends Component {
 
   renderPeers() {
     return Object.entries(this.state.peers).map(entry => {
-      const peer = entry[1]
-      debug('render peer', peer, entry)
-      return <div key={peer._id}>
-        <video id={peer._id} controls stream_id={peer.stream && peer.stream.id}></video>
+      const [peerId, peer] = entry
+      debug('render peer', peerId, peer, entry)
+      return <div key={peerId}>
+        <video ref={video => peer.video = video}></video>
       </div>
     })
   }
