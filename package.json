@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "debug": "^3.1.0",
+    "npm-run-all": "^4.1.3",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4",
@@ -16,7 +17,21 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "socket.io": "node server.js",
-    "dev:socket.io": "DEBUG=screen-share* npm run socket.io"
+    "server:listen": "node dist/server.js",
+    "server:start": "npm-run-all server:build server:listen",
+    "server:build": "babel server.js -d dist",
+    "server:dev": "DEBUG=*server* nodemon -x babel-node -- server.js",
+    "server:test": "mocha test/server --require babel-core/register"
+  },
+  "engines": {
+    "node": ">=4.8.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "mocha": "^5.1.1",
+    "nodemon": "^1.17.4"
   }
 }
